@@ -1021,6 +1021,10 @@ public class DefaultListableBeanFactory extends AbstractAutowireCapableBeanFacto
 		else {
 			if (hasBeanCreationStarted()) {
 				// Cannot modify startup-time collection elements anymore (for stable iteration)
+				// 注意这里的锁，理解不是单独为了beanDefinitionMap的线程安全
+				// 这里加锁的目的：beanDefinitionMap以及beanDefinitionNames的同步，避免出现两者不一致的问题
+				// beanDefinitionNames被volatile修饰了，为啥还要使用copyOnWrite的方式？
+				// volatile只能保证指向对象的内存地址的可见性，但是无法保障List中的对象的可见性。
 				synchronized (this.beanDefinitionMap) {
 					this.beanDefinitionMap.put(beanName, beanDefinition);
 					List<String> updatedDefinitions = new ArrayList<>(this.beanDefinitionNames.size() + 1);
