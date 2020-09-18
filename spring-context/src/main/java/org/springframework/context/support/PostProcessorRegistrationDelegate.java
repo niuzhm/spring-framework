@@ -56,12 +56,19 @@ final class PostProcessorRegistrationDelegate {
 	}
 
 
+	/**
+	 * @param beanFactory
+	 * @param beanFactoryPostProcessors 在bean创建前，能够修改bean的元数据
+	 */
 	public static void invokeBeanFactoryPostProcessors(
 			ConfigurableListableBeanFactory beanFactory, List<BeanFactoryPostProcessor> beanFactoryPostProcessors) {
 
 		// Invoke BeanDefinitionRegistryPostProcessors first, if any.
 		Set<String> processedBeans = new HashSet<>();
 
+		// DefaultListableBeanFactory 实现   BeanDefinitionRegistry 接口
+		// DefaultListableBeanFactory 也实现 ConfigurableListableBeanFactory 接口
+		// 所以这里如果传入的是DefaultListableBeanFactory实例，这里是可以进入的
 		if (beanFactory instanceof BeanDefinitionRegistry) {
 			BeanDefinitionRegistry registry = (BeanDefinitionRegistry) beanFactory;
 			List<BeanFactoryPostProcessor> regularPostProcessors = new ArrayList<>();
